@@ -14,22 +14,29 @@
 
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dice.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+  <span class="dice dice-1" title="Dice 1"></span>
+  <span class="dice dice-2" title="Dice 2"></span>
+  <span class="dice dice-3" title="Dice 3"></span>
+  <span class="dice dice-4" title="Dice 4"></span>
+  <span class="dice dice-5" title="Dice 5"></span>
+  <span class="dice dice-6" title="Dice 6"></span>
   <script>
-    var pmax = 13;
+        var pmax = 13;
         var mmax = 3000;
         var pivots = [];
         var movers = [];
         var radius = 0.4;
-        var step = 1000;
+        var step = -1;
 
         var love = 0.5;
 
         var fps = 60;
-        var speed = .5;
+        var speed = 1;
         var traces = false;
 
         var zoom;
