@@ -19,12 +19,7 @@
 </head>
 
 <body>
-  <span class="dice dice-1" title="Dice 1"></span>
-  <span class="dice dice-2" title="Dice 2"></span>
-  <span class="dice dice-3" title="Dice 3"></span>
-  <span class="dice dice-4" title="Dice 4"></span>
-  <span class="dice dice-5" title="Dice 5"></span>
-  <span class="dice dice-6" title="Dice 6"></span>
+  <div id="dice"></div>
   <script>
         var pmax = 13;
         var mmax = 3000;
@@ -180,6 +175,15 @@
   <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
   <script src="js/plugins.js"></script>
   <script src="js/main.js"></script>
+
+  <script>
+    (function($) {
+      $(document).ready(function() {
+        var random = Math.floor((Math.random() * 6) + 1);
+        $('#dice').html(`<span class="dice dice-${random}" title="Dice ${random}"></span>`);
+      });
+    })(jQuery);
+  </script>
 
   <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
   <script>
