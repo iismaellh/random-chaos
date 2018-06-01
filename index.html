@@ -18,14 +18,158 @@
 </head>
 
 <body>
+  <script>
+    var pmax = 13;
+        var mmax = 3000;
+        var pivots = [];
+        var movers = [];
+        var radius = 0.4;
+        var step = 1000;
+
+        var love = 0.5;
+
+        var fps = 60;
+        var speed = .5;
+        var traces = false;
+
+        var zoom;
+
+        function setup() {
+        
+            var d, c, a, x, y, i;
+                
+            d = 10;
+            c = color(255);
+            
+            createCanvas(windowWidth, windowHeight);
+
+            for(i = 0; i < pmax; i++) {
+                a = TWO_PI * i/pmax;
+                x = sin(a);
+                y = -cos(a);
+                pivots.push(new Point(x, y, d, c));
+            }
+            
+            d = 5;
+            c = color(255, 50);
+            
+            for(i = 0; i < mmax; i++) {
+                x = random(-1,+1);
+                y = random(-1,+1);
+                movers.push(new Point(x, y, d, c));
+            }
+            
+            }
+
+
+            function draw() {
+            
+            // update the model
+            tick();
+            
+            background(0);
+            translate(width/2, height/2);
+            zoom = min(width, height);
+            scale(zoom * radius, zoom * radius);
+            strokeWeight(1/zoom);
+            
+            // draw all the pivot points
+            noStroke();
+            for(var i = 0; i < pmax; i++) {
+                pivots[i].draw();
+            }
+            
+            // move and draw all the movers
+            for(i = 0; i < mmax; i++) {
+                movers[i].draw();
+            }
+
+        }
+
+
+        function tick() {
+        
+        // time in seconds, multiplied by speed factor
+        var t = frameCount / fps * speed;
+        
+        // calculate current step
+        var s = floor(t);
+        
+        // is it time for the next step?
+        if(s > step) {
+            // update step variable
+            step = s;
+            // update targets
+            for(i = 0; i < mmax; i++) {
+            movers[i].next();
+            }
+        }
+        
+        // progress towards the next step (value between 0 and 1)
+        var dt = t - s;
+        
+        // update all movers
+        for(i = 0; i < mmax; i++) {
+            movers[i].move(dt);
+        }
+        
+        }
+
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+
+
+        function Point(x, y, d, c) {
+        
+            // start and target coordinates
+            var sx, tx, px;
+            var sy, ty, py;
+            
+            // expose x and y coordinates
+            this.x = sx = tx = px = x;
+            this.y = sy = ty = py = y;
+            
+            this.draw = function() {
+                if(traces) {
+                stroke(c);
+                line(px, py, this.x, this.y);
+                } else {
+                fill(c);
+                ellipse(this.x, this.y, d/zoom, d/zoom);
+                }
+            };
+            
+            this.next = function() {
+                // pick new target point
+                var pivot = random(pivots);
+                // old target becomes the new starting point
+                sx = tx; 
+                sy = ty;
+                // target coordinates between starting point and pivot point
+                tx = lerp(sx, pivot.x, love);
+                ty = lerp(sy, pivot.y, love);
+            };
+            
+            this.move = function(t) {
+                // previous coordinates
+                px = this.x;
+                py = this.y;
+                // interpolate between start and target coordinates
+                this.x = lerp(sx, tx, t);
+                this.y = lerp(sy, ty, t);
+            };
+        }
+    </script>
   <!--[if lte IE 9]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
-
-  <!-- Add your site or application content here -->
-  <p>Hello world! This is HTML5 Boilerplate.</p>
   <script src="js/vendor/modernizr-3.6.0.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.rawgit.com/bit101/quicksettings/master/quicksettings.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.rawgit.com/bitcraftlab/p5.gui/master/libraries/p5.gui.js" crossorigin="anonymous"></script>
   <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
   <script src="js/plugins.js"></script>
   <script src="js/main.js"></script>
